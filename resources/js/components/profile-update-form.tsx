@@ -1,13 +1,11 @@
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { send } from '@/routes/verification';
 import { SharedData } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Form, Link, usePage } from '@inertiajs/react';
-import { Textarea } from './ui/textarea';
+import FormInput from './form-input';
+import FormTextarea from './form-textarea';
 
 export default function ProfileUpdateForm({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
     const { auth } = usePage<SharedData>().props;
@@ -22,34 +20,26 @@ export default function ProfileUpdateForm({ mustVerifyEmail, status }: { mustVer
         >
             {({ processing, recentlySuccessful, errors }) => (
                 <>
-                    <div className='grid gap-2'>
-                        <Label htmlFor='name'>Name</Label>
-                        <Input
-                            id='name'
-                            className='mt-1 block w-full'
-                            defaultValue={auth.user.name}
-                            name='name'
-                            required
-                            autoComplete='name'
-                            placeholder='Full name'
-                        />
-                        <InputError className='mt-2' message={errors.name} />
-                    </div>
+                    <FormInput
+                        label='Name'
+                        errorMessage={errors.name}
+                        name='name'
+                        required
+                        defaultValue={auth.user.name}
+                        autoComplete='name'
+                        placeholder='Full name'
+                    />
 
-                    <div className='grid gap-2'>
-                        <Label htmlFor='email'>Email address</Label>
-                        <Input
-                            id='email'
-                            type='email'
-                            className='mt-1 block w-full'
-                            defaultValue={auth.user.email}
-                            name='email'
-                            required
-                            autoComplete='username'
-                            placeholder='Email address'
-                        />
-                        <InputError className='mt-2' message={errors.email} />
-                    </div>
+                    <FormInput
+                        label='Email address'
+                        errorMessage={errors.email}
+                        defaultValue={auth.user.email}
+                        required
+                        type='email'
+                        name='email'
+                        autoComplete='username'
+                        placeholder='Email address'
+                    />
 
                     {mustVerifyEmail && auth.user.email_verified_at === null && (
                         <div>
@@ -72,11 +62,14 @@ export default function ProfileUpdateForm({ mustVerifyEmail, status }: { mustVer
                         </div>
                     )}
 
-                    <div className='grid gap-2'>
-                        <Label htmlFor='bio'>Bio</Label>
-                        <Textarea required id='bio' name='bio' defaultValue={auth.user.bio} />
-                        <InputError className='mt-2' message={errors.bio} />
-                    </div>
+                    <FormTextarea
+                        label='Bio'
+                        errorMessage={errors.bio}
+                        required
+                        id='bio'
+                        name='bio'
+                        defaultValue={auth.user.bio}
+                    />
 
                     <div className='flex items-center gap-4'>
                         <Button disabled={processing} data-test='update-profile-button'>

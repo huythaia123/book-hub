@@ -15,7 +15,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
+type Props = { mustVerifyEmail: boolean; status?: string };
+
+export default function Profile({ mustVerifyEmail, status }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title='Profile settings' />
