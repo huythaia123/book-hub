@@ -42,3 +42,15 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Book {
+    id: number;
+    user_id: number;
+    title: string;
+    slug: string;
+    description: string;
+    status: string;
+    cover_image?: string;
+    created_at: Date;
+    updated_at: Date;
+}

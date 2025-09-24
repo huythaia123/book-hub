@@ -14,7 +14,14 @@ class BookController extends Controller
      */
     public function index()
     {
-        return Inertia::render('books/index');
+        $books = Book::all();
+
+        return Inertia::render(
+            'books/index',
+            [
+                'listBook' => $books
+            ]
+        );
     }
 
     /**
@@ -46,17 +53,17 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Book $book)
     {
-        //
+        return Inertia::render('books/show', ['book' => $book]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Book $book)
     {
-        //
+        return Inertia::render('books/edit', ['book' => $book]);
     }
 
     /**

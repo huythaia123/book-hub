@@ -5,6 +5,7 @@ import HeadingSmall from '@/components/heading-small';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
+import books from '@/routes/books';
 import { BreadcrumbItem } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Form, Head } from '@inertiajs/react';
@@ -14,9 +15,13 @@ const breadcrumbs: BreadcrumbItem[] = [
         title: 'Dashboard',
         href: dashboard().url,
     },
+    {
+        title: 'Create book',
+        href: books.create().url,
+    },
 ];
 
-export default function BooksIndex() {
+export default function BookCreate() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title='Dashboard' />
