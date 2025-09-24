@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class BookController extends Controller
@@ -12,7 +14,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('books/index');
     }
 
     /**
@@ -20,7 +22,7 @@ class BookController extends Controller
      */
     public function create()
     {
-        return Inertia::render('books/books-index');
+        return Inertia::render('books/create');
     }
 
     /**
@@ -28,7 +30,17 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:255']
+        ]);
+
+        $request->user()->books()->create([
+            ...$validated,
+            'slug' => Str::slug($validated['title']),
+        ]);
+
+        return to_route('books.index');
     }
 
     /**
