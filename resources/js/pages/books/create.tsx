@@ -29,11 +29,7 @@ export default function BookCreate() {
                 <div className='space-y-6'>
                     <HeadingSmall title='Create book' />
 
-                    <Form
-                        {...BookController.store.form()}
-                        className='space-y-6'
-                        options={{ preserveScroll: true, reset: [] }}
-                    >
+                    <Form {...BookController.store.form()} className='space-y-6' options={{ preserveScroll: true }}>
                         {({ processing, recentlySuccessful, errors, reset }) => (
                             <>
                                 <FormInput label='Title' errorMessage={errors.title} required id='title' name='title' />

@@ -1,8 +1,13 @@
+import BookController from '@/actions/App/Http/Controllers/BookController';
+import FormInput from '@/components/form-input';
+import FormTextarea from '@/components/form-textarea';
 import HeadingSmall from '@/components/heading-small';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import books from '@/routes/books';
 import { Book, BreadcrumbItem } from '@/types';
+import { Transition } from '@headlessui/react';
 import { Form, Head } from '@inertiajs/react';
 
 export default function BookEdit({ book }: { book: Book }) {
@@ -28,13 +33,59 @@ export default function BookEdit({ book }: { book: Book }) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title='Dashboard' />
+
             <div className='px-4 py-6'>
                 <div className='space-y-6'>
                     <HeadingSmall title='Book edit' />
 
                     <div className='space-y-2'>{JSON.stringify(book)}</div>
 
-                    <Form>{({ errors }) => <div></div>}</Form>
+                    <Form
+                        {...BookController.update.form(book.id)}
+                        className='space-y-6'
+                        options={{ preserveScroll: true }}
+                    >
+                        {({ processing, recentlySuccessful, errors }) => (
+                            <>
+                                <FormInput
+                                    label='Title'
+                                    errorMessage={errors.title}
+                                    required
+                                    id='title'
+                                    name='title'
+                                    defaultValue={book.title}
+                                />
+                                <FormTextarea
+                                    label='Description'
+                                    errorMessage={errors.description}
+                                    required
+                                    id='description'
+                                    name='description'
+                                    defaultValue={book.description}
+                                />
+                                <div>
+                                    <p>Status: {String(book.status)}</p>
+                                    <p>Created At: {new Date(book.created_at).toLocaleString()}</p>
+                                    <p>Updated At: {new Date(book.updated_at).toLocaleString()}</p>
+                                </div>
+
+                                <div className='flex items-center gap-4'>
+                                    <Button disabled={processing} data-test='update-profile-button'>
+                                        Save
+                                    </Button>
+                                    <Transition
+                                        show={recentlySuccessful}
+                                        enter='transition ease-in-out'
+                                        enterFrom='opacity-0'
+                                        leave='transition ease-in-out'
+                                        leaveTo='opacity-0'
+                                    >
+                                        <p className='text-sm text-neutral-600'>Saved</p>
+                                    </Transition>
+                                </div>
+                            </>
+                        )}
+                    </Form>
                 </div>
             </div>
         </AppLayout>

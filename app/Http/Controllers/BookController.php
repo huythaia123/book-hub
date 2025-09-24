@@ -9,6 +9,11 @@ use Inertia\Inertia;
 
 class BookController extends Controller
 {
+    private function slugify(string $str)
+    {
+        return Str::slug($str);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -44,7 +49,7 @@ class BookController extends Controller
 
         $request->user()->books()->create([
             ...$validated,
-            'slug' => Str::slug($validated['title']),
+            'slug' => $this->slugify($validated['title']),
         ]);
 
         return to_route('books.index');
@@ -69,9 +74,22 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Book $book)
     {
-        //
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:255']
+        ]);
+
+        $book->fill($validated);
+
+        if ($book->isDirty('title')) {
+            $book->slug = $this->slugify($validated['title']);
+        }
+
+        $book->save();
+
+        return to_route('books.show', ['book' => $book->id]);
     }
 
     /**
