@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\BookStatus;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -15,9 +16,6 @@ class BookController extends Controller
         return Str::slug($str);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $books = Book::all();
@@ -30,17 +28,11 @@ class BookController extends Controller
         );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return Inertia::render('books/create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -56,19 +48,16 @@ class BookController extends Controller
         return to_route('books.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Book $book)
     {
+        Gate::authorize('view', $book);
         return Inertia::render('books/show', ['book' => $book]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Book $book)
     {
+        Gate::authorize('update', $book);
+
         $bookStatus = $book && $book->status === BookStatus::Draft->value
             ? [BookStatus::Draft->value, BookStatus::Pending->value]
             : array_values(array_diff(BookStatus::values(), [BookStatus::Draft->value, BookStatus::Pending->value]));
@@ -82,17 +71,15 @@ class BookController extends Controller
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Book $book)
     {
+        Gate::authorize('update', $book);
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],
             'status' => ['in:' . implode(',', BookStatus::values())],
         ]);
-        // dd($validated);
 
         $book->fill($validated);
 
@@ -105,11 +92,15 @@ class BookController extends Controller
         return to_route('books.show', ['book' => $book->id]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Book $book)
     {
-        //
+        Gate::authorize('delete', $book);
+
+        if ($book->status === BookStatus::Draft->value || $book->status === BookStatus::Pending->value)
+            $book->forceDelete();
+        else
+            $book->delete();
+
+        return to_route('books.index');
     }
 }

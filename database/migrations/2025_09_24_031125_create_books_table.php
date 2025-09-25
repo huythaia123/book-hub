@@ -19,7 +19,9 @@ return new class extends Migration {
             $table->text('description');
             $table->enum('status', BookStatus::values())->default(BookStatus::Draft->value);
             $table->string('cover_image')->nullable();
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

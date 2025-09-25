@@ -32,10 +32,11 @@ export default function BookIndex({ listBook }: Props) {
                         {listBook.map((book) => (
                             <div
                                 key={book.id}
-                                className='rounded border p-2'
+                                className='rounded-md border p-2'
                                 onClick={() => router.visit(books.show({ book: book.id }))}
                             >
-                                <p>Tên sách: {book.title}</p>
+                                <p>Book id: {book.id}</p>
+                                <p>Title: {book.title}</p>
                             </div>
                         ))}
                     </div>

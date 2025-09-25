@@ -66,18 +66,6 @@ export default function BookEdit({ book, bookStatus }: { book: Book; bookStatus:
                                     name='description'
                                     defaultValue={book.description}
                                 />
-                                {/* <Select>
-                                    <SelectTrigger className='w-[180px]'>
-                                        <SelectValue placeholder='Select book status' />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            {bookStatus.map((item) => (
-                                                <SelectItem value={item}>{item}</SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select> */}
                                 {book.status !== 'Pending' && (
                                     <FormSelect
                                         label='Book status'

@@ -30,11 +30,18 @@ export default function Show({ book }: { book: Book }) {
                     <HeadingSmall title='Book show' />
 
                     <div className='space-y-2'>
-                        <div>
-                            <Button onClick={() => router.visit(books.edit(book.id).url)}>Edit book</Button>
+                        <div className='space-x-2'>
+                            <Button variant={'outline'} onClick={() => router.visit(books.edit(book.id).url)}>
+                                Edit book
+                            </Button>
+                            <Button variant={'destructive'} onClick={() => router.delete(books.destroy(book.id).url)}>
+                                Delete book
+                            </Button>
                         </div>
 
-                        {JSON.stringify(book)}
+                        <pre className='mt-2 rounded-md border p-4'>
+                            <code>{JSON.stringify(book, null, 2)}</code>
+                        </pre>
                     </div>
                 </div>
             </div>
