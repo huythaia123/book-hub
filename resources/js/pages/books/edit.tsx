@@ -1,5 +1,6 @@
 import BookController from '@/actions/App/Http/Controllers/BookController';
 import FormInput from '@/components/form-input';
+import FormSelect from '@/components/form-select';
 import FormTextarea from '@/components/form-textarea';
 import HeadingSmall from '@/components/heading-small';
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,7 @@ import { Book, BreadcrumbItem } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Form, Head } from '@inertiajs/react';
 
-export default function BookEdit({ book }: { book: Book }) {
+export default function BookEdit({ book, bookStatus }: { book: Book; bookStatus: string[] }) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Dashboard',
@@ -38,7 +39,9 @@ export default function BookEdit({ book }: { book: Book }) {
                 <div className='space-y-6'>
                     <HeadingSmall title='Book edit' />
 
-                    <div className='space-y-2'>{JSON.stringify(book)}</div>
+                    <pre className='mt-2 rounded-md border p-4'>
+                        <code>{JSON.stringify(book, null, 2)}</code>
+                    </pre>
 
                     <Form
                         {...BookController.update.form(book.id)}
@@ -63,6 +66,30 @@ export default function BookEdit({ book }: { book: Book }) {
                                     name='description'
                                     defaultValue={book.description}
                                 />
+                                {/* <Select>
+                                    <SelectTrigger className='w-[180px]'>
+                                        <SelectValue placeholder='Select book status' />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            {bookStatus.map((item) => (
+                                                <SelectItem value={item}>{item}</SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select> */}
+                                {book.status !== 'Pending' && (
+                                    <FormSelect
+                                        label='Book status'
+                                        listData={bookStatus}
+                                        errorMessage={errors.status}
+                                        required
+                                        id='status'
+                                        name='status'
+                                        defaultValue={book.status}
+                                    />
+                                )}
+
                                 <div>
                                     <p>Status: {String(book.status)}</p>
                                     <p>Created At: {new Date(book.created_at).toLocaleString()}</p>

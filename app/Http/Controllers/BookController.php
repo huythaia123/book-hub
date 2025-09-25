@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BookStatus;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -68,7 +69,17 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        return Inertia::render('books/edit', ['book' => $book]);
+        $bookStatus = $book && $book->status === BookStatus::Draft->value
+            ? [BookStatus::Draft->value, BookStatus::Pending->value]
+            : array_values(array_diff(BookStatus::values(), [BookStatus::Draft->value, BookStatus::Pending->value]));
+
+        return Inertia::render(
+            'books/edit',
+            [
+                'book' => $book,
+                'bookStatus' => $bookStatus,
+            ]
+        );
     }
 
     /**
@@ -78,8 +89,10 @@ class BookController extends Controller
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string', 'max:255']
+            'description' => ['required', 'string', 'max:255'],
+            'status' => ['in:' . implode(',', BookStatus::values())],
         ]);
+        // dd($validated);
 
         $book->fill($validated);
 
