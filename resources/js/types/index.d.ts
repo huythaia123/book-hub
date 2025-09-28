@@ -49,6 +49,7 @@ export interface Book {
     title: string;
     slug: string;
     description: string;
+    aud_type: string;
     status: string;
     cover_image?: string;
     created_at: Date;

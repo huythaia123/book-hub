@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AudTypeEnum;
 use App\BookStatusEnum;
 use App\Models\Book;
 use Illuminate\Http\Request;
@@ -19,7 +20,6 @@ class BookController extends Controller
     public function index()
     {
         $books = Book::all();
-
         return Inertia::render(
             'books/index',
             [
@@ -30,14 +30,18 @@ class BookController extends Controller
 
     public function create()
     {
-        return Inertia::render('books/create');
+        return Inertia::render(
+            'books/create',
+            ['audType' => AudTypeEnum::values()]
+        );
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string', 'max:255']
+            'description' => ['required', 'string', 'max:255'],
+            'aud_type' => ['in:' . implode(',', AudTypeEnum::values())],
         ]);
 
         $request->user()->books()->create([
@@ -60,7 +64,10 @@ class BookController extends Controller
 
         $bookStatus = $book && $book->status === BookStatusEnum::Draft->value
             ? [BookStatusEnum::Draft->value, BookStatusEnum::Pending->value]
-            : array_values(array_diff(BookStatusEnum::values(), [BookStatusEnum::Draft->value, BookStatusEnum::Pending->value]));
+            : array_values(array_diff(
+                BookStatusEnum::values(),
+                [BookStatusEnum::Draft->value, BookStatusEnum::Pending->value]
+            ));
 
         return Inertia::render(
             'books/edit',

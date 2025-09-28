@@ -1,5 +1,6 @@
 import BookController from '@/actions/App/Http/Controllers/BookController';
 import FormInput from '@/components/form-input';
+import FormSelect from '@/components/form-select';
 import FormTextarea from '@/components/form-textarea';
 import HeadingSmall from '@/components/heading-small';
 import { Button } from '@/components/ui/button';
@@ -21,7 +22,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function BookCreate() {
+type Props = {
+    audType: string[];
+};
+
+export default function BookCreate({ audType }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title='Dashboard' />
@@ -40,7 +45,14 @@ export default function BookCreate() {
                                     id='description'
                                     name='description'
                                 />
-
+                                <FormSelect
+                                    label='Aud type'
+                                    listData={audType}
+                                    errorMessage={errors.aud_type}
+                                    required
+                                    id='aud_type'
+                                    name='aud_type'
+                                />
                                 <div className='flex items-center gap-4'>
                                     <Button disabled={processing} data-test='update-profile-button'>
                                         Save

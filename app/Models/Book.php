@@ -13,6 +13,7 @@ class Book extends Model
         'title',
         'slug',
         'description',
+        'aud_type',
         'status',
         'cover_image'
     ];
