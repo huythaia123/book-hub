@@ -2,7 +2,7 @@
 
 namespace App;
 
-enum BookStatus: string
+enum BookStatusEnum: string
 {
     case Draft = 'Draft';
     case Pending = 'Pending';

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\BookStatus;
+use App\BookStatusEnum;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -58,9 +58,9 @@ class BookController extends Controller
     {
         Gate::authorize('update', $book);
 
-        $bookStatus = $book && $book->status === BookStatus::Draft->value
-            ? [BookStatus::Draft->value, BookStatus::Pending->value]
-            : array_values(array_diff(BookStatus::values(), [BookStatus::Draft->value, BookStatus::Pending->value]));
+        $bookStatus = $book && $book->status === BookStatusEnum::Draft->value
+            ? [BookStatusEnum::Draft->value, BookStatusEnum::Pending->value]
+            : array_values(array_diff(BookStatusEnum::values(), [BookStatusEnum::Draft->value, BookStatusEnum::Pending->value]));
 
         return Inertia::render(
             'books/edit',
@@ -78,7 +78,7 @@ class BookController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],
-            'status' => ['in:' . implode(',', BookStatus::values())],
+            'status' => ['in:' . implode(',', BookStatusEnum::values())],
         ]);
 
         $book->fill($validated);
@@ -96,7 +96,7 @@ class BookController extends Controller
     {
         Gate::authorize('delete', $book);
 
-        if ($book->status === BookStatus::Draft->value || $book->status === BookStatus::Pending->value)
+        if ($book->status === BookStatusEnum::Draft->value || $book->status === BookStatusEnum::Pending->value)
             $book->forceDelete();
         else
             $book->delete();
