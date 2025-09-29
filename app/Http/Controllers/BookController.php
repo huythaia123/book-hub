@@ -41,7 +41,7 @@ class BookController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],
-            'aud_type' => ['in:' . implode(',', AudTypeEnum::values())],
+            'aud_type' => ['required', 'in:' . implode(',', AudTypeEnum::values())],
         ]);
 
         $request->user()->books()->create([
@@ -74,6 +74,7 @@ class BookController extends Controller
             [
                 'book' => $book,
                 'bookStatus' => $bookStatus,
+                'audType' => AudTypeEnum::values(),
             ]
         );
     }
@@ -85,7 +86,8 @@ class BookController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],
-            'status' => ['in:' . implode(',', BookStatusEnum::values())],
+            'aud_type' => ['required', 'in:' . implode(',', AudTypeEnum::values())],
+            'status' => ['required', 'in:' . implode(',', BookStatusEnum::values())],
         ]);
 
         $book->fill($validated);
