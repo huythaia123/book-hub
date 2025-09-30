@@ -15,6 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('books/{book}/cover', [BookController::class, 'updateBookCover']);
     Route::resource('books', BookController::class);
 });
 

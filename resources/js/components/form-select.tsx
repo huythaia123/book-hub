@@ -12,15 +12,25 @@ type Props = {
     selectPlaceholder?: string;
 } & React.ComponentProps<'input'>;
 
-export default function FormSelect({ label, listData, errorMessage, selectPlaceholder, className, ...props }: Props) {
-    const [status, setStatus] = useState<string>((props.defaultValue as string) || '');
+export default function FormSelect({
+    label,
+    listData,
+    errorMessage,
+    selectPlaceholder,
+    // ---
+    className,
+    defaultValue,
+    ...props
+}: Props) {
+    const [selectedValue, setSelectedValue] = useState<string>((defaultValue as string) || '');
 
     return (
         <div className='grid gap-2.5'>
             <Label htmlFor={props.id}>{label}</Label>
-            <Input className={cn(className, 'overflow-hidden')} {...props} hidden type='text' value={status} readOnly />
-            <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className='w-full'>
+            <Input className={'overflow-hidden'} {...props} hidden type='text' value={selectedValue} readOnly />
+
+            <Select value={selectedValue} onValueChange={setSelectedValue}>
+                <SelectTrigger className={cn('w-full', className)}>
                     <SelectValue placeholder={selectPlaceholder} />
                 </SelectTrigger>
                 <SelectContent>

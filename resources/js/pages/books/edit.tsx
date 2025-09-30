@@ -1,3 +1,4 @@
+import BookCoverForm from '@/components/book-cover-form';
 import BookEditForm from '@/components/book-edit-form';
 import HeadingSmall from '@/components/heading-small';
 import PreviewJson from '@/components/preview-json';
@@ -43,7 +44,7 @@ export default function BookEdit({ book }: Props) {
                     <div className='grid grid-cols-2 gap-4'>
                         <BookEditForm />
 
-                        <div className='border'>changed avatar</div>
+                        <BookCoverForm />
                     </div>
                 </div>
             </div>
