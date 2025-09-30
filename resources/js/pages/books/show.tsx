@@ -1,4 +1,5 @@
 import HeadingSmall from '@/components/heading-small';
+import PreviewJson from '@/components/preview-json';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
@@ -39,9 +40,7 @@ export default function Show({ book }: { book: Book }) {
                             </Button>
                         </div>
 
-                        <pre className='mt-2 rounded-md border p-4'>
-                            <code>{JSON.stringify(book, null, 2)}</code>
-                        </pre>
+                        <PreviewJson json={book} />
                     </div>
                 </div>
             </div>
