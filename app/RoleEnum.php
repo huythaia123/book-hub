@@ -8,7 +8,7 @@ enum RoleEnum: string
     case Moderator = 'Moderator';
     case Author = 'Author';
     case Reader = 'Reader';
-    case Guest = 'Guest';
+    // case Guest = 'Guest';
 
     public static function values(): array
     {

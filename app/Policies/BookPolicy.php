@@ -4,53 +4,51 @@ namespace App\Policies;
 
 use App\Models\Book;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\RoleEnum;
 
 class BookPolicy
 {
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Book $book): bool
+    public function before(User $user, string $ability)
     {
-        return $user->id === $book->user_id;
+        if ($user->hasRole(RoleEnum::Admin->value))
+            return true;
+        return null;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function viewAny(User $user)
     {
-        return true;
+        return $user->hasRole(RoleEnum::Author->value);
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Book $book): bool
+
+    public function view(User $user, Book $book)
     {
-        return $user->id === $book->user_id;
+        return $user->id === $book->user_id && $user->hasRole(RoleEnum::Author->value);
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Book $book): bool
+
+    public function create(User $user)
     {
-        return $user->id === $book->user_id;
+        return $user->hasRole(RoleEnum::Author->value);
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
+
+    public function update(User $user, Book $book)
+    {
+        return $user->id === $book->user_id && $user->hasRole(RoleEnum::Author->value);
+    }
+
+
+    public function delete(User $user, Book $book)
+    {
+        return $user->id === $book->user_id && $user->hasRole(RoleEnum::Author->value);
+    }
+
     // public function restore(User $user, Book $book): bool
     // {
     //     return false;
     // }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
     // public function forceDelete(User $user, Book $book): bool
     // {
     //     return false;

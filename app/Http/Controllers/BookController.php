@@ -19,9 +19,12 @@ class BookController extends Controller
     }
 
     // show list book page
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::all();
+        Gate::authorize('viewAny', Book::class);
+        $books = $request->user()->books;
+        // $books = Book::all();
+
         return Inertia::render(
             'books/index',
             [
@@ -31,8 +34,9 @@ class BookController extends Controller
     }
 
     // show book create page
-    public function create()
+    public function create(Request $request)
     {
+        Gate::authorize('create', Book::class);
         return Inertia::render(
             'books/create',
             ['audType' => AudTypeEnum::values()]
@@ -42,6 +46,8 @@ class BookController extends Controller
     // store book into db
     public function store(Request $request)
     {
+        Gate::authorize('create', Book::class);
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],
@@ -108,19 +114,22 @@ class BookController extends Controller
         return to_route('books.show', ['book' => $book->id]);
     }
 
-    // delete book (soft delete)
+    // delete book
     public function destroy(Book $book)
     {
         Gate::authorize('delete', $book);
 
         if ($book->status === BookStatusEnum::Draft->value || $book->status === BookStatusEnum::Pending->value)
+            // forceDelete if status is Draft or Pending
             $book->forceDelete();
         else
+            // soft delete
             $book->delete();
 
         return to_route('books.index');
     }
 
+    // change cover image of book
     public function updateBookCover(Request $request, Book $book)
     {
         $request->validate([
@@ -141,6 +150,7 @@ class BookController extends Controller
             $book->cover_image = $file->storeAs('book_cover', $filename, 'public');
             $book->save();
         } else
+            // back to previous route with error message
             return back();
 
         return to_route('books.show', ['book' => $book->id]);

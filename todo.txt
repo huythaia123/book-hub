@@ -1,2 +1,2 @@
-current: crud book, update book cover [DONE]
-next: fix policies book with role [PENDING]
+[DONE]: crud book, update book cover
+[ON GOING]: fix policies book with role

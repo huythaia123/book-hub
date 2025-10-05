@@ -13,7 +13,6 @@ export default function BookCoverForm() {
     const { book } = usePage<Props>().props;
     const [coverImage, setCoverImage] = useState<File & { src: string }>();
     const [croppedImg, setCroppedImg] = useState<File>();
-    console.log(book);
 
     return (
         <Form
@@ -34,6 +33,7 @@ export default function BookCoverForm() {
                         onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) setCoverImage(Object.assign(file, { src: URL.createObjectURL(file) }));
+                            else setCoverImage(undefined);
                         }}
                     />
 
