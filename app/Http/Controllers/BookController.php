@@ -59,7 +59,8 @@ class BookController extends Controller
             'slug' => $this->slugify($validated['title']),
         ]);
 
-        return to_route('books.index');
+        return to_route('books.index')
+            ->with('success', 'Create success.');
     }
 
     // show detail book
@@ -111,7 +112,8 @@ class BookController extends Controller
 
         $book->save();
 
-        return to_route('books.show', ['book' => $book->id]);
+        return to_route('books.show', ['book' => $book->id])
+            ->with('success', 'Update success.');
     }
 
     // delete book
@@ -126,7 +128,8 @@ class BookController extends Controller
             // soft delete
             $book->delete();
 
-        return to_route('books.index');
+        return to_route('books.index')
+            ->with('success', 'Delete success.');
     }
 
     // change cover image of book
@@ -151,8 +154,9 @@ class BookController extends Controller
             $book->save();
         } else
             // back to previous route with error message
-            return back();
+            return back()->with('error', 'Update cover image failure.');
 
-        return to_route('books.show', ['book' => $book->id]);
+        return to_route('books.show', ['book' => $book->id])
+            ->with('success', 'Update success.');
     }
 }
