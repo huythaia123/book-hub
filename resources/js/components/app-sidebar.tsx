@@ -12,28 +12,12 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import books from '@/routes/books';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { SharedData, type NavItem } from '@/types';
+import { RoleEnum } from '@/utils/RoleEnum';
+import { userHasAnyRole } from '@/utils/userHasAnyRole';
+import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, BookPlus, Folder, LayoutGrid, Library } from 'lucide-react';
 import AppLogo from './app-logo';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Create book',
-        href: books.create(),
-        icon: BookPlus,
-    },
-    {
-        title: 'List book',
-        href: books.index(),
-        icon: Library,
-    },
-];
 
 const footerNavItems: NavItem[] = [
     {
@@ -49,6 +33,24 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage<SharedData>().props;
+
+    const canAccessBook = userHasAnyRole(auth.user, [RoleEnum.Admin, RoleEnum.Author]);
+
+    const mainNavItems: NavItem[] = [
+        {
+            title: 'Dashboard',
+            href: dashboard(),
+            icon: LayoutGrid,
+        },
+        ...(canAccessBook
+            ? [
+                  { title: 'Create book', href: books.create(), icon: BookPlus },
+                  { title: 'List book', href: books.index(), icon: Library },
+              ]
+            : []),
+    ];
+
     return (
         <Sidebar collapsible='icon' variant='sidebar'>
             <SidebarHeader>

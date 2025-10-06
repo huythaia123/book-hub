@@ -19,9 +19,12 @@ class BookController extends Controller
     }
 
     // show list book page
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::all();
+        Gate::authorize('viewAny', Book::class);
+        $books = $request->user()->books;
+        // $books = Book::all();
+
         return Inertia::render(
             'books/index',
             [
@@ -31,8 +34,9 @@ class BookController extends Controller
     }
 
     // show book create page
-    public function create()
+    public function create(Request $request)
     {
+        Gate::authorize('create', Book::class);
         return Inertia::render(
             'books/create',
             ['audType' => AudTypeEnum::values()]
@@ -42,6 +46,8 @@ class BookController extends Controller
     // store book into db
     public function store(Request $request)
     {
+        Gate::authorize('create', Book::class);
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],
@@ -53,7 +59,8 @@ class BookController extends Controller
             'slug' => $this->slugify($validated['title']),
         ]);
 
-        return to_route('books.index');
+        return to_route('books.index')
+            ->with('success', 'Create success.');
     }
 
     // show detail book
@@ -105,22 +112,27 @@ class BookController extends Controller
 
         $book->save();
 
-        return to_route('books.show', ['book' => $book->id]);
+        return to_route('books.show', ['book' => $book->id])
+            ->with('success', 'Update success.');
     }
 
-    // delete book (soft delete)
+    // delete book
     public function destroy(Book $book)
     {
         Gate::authorize('delete', $book);
 
         if ($book->status === BookStatusEnum::Draft->value || $book->status === BookStatusEnum::Pending->value)
+            // forceDelete if status is Draft or Pending
             $book->forceDelete();
         else
+            // soft delete
             $book->delete();
 
-        return to_route('books.index');
+        return to_route('books.index')
+            ->with('success', 'Delete success.');
     }
 
+    // change cover image of book
     public function updateBookCover(Request $request, Book $book)
     {
         $request->validate([
@@ -141,8 +153,10 @@ class BookController extends Controller
             $book->cover_image = $file->storeAs('book_cover', $filename, 'public');
             $book->save();
         } else
-            return back();
+            // back to previous route with error message
+            return back()->with('error', 'Update cover image failure.');
 
-        return to_route('books.show', ['book' => $book->id]);
+        return to_route('books.show', ['book' => $book->id])
+            ->with('success', 'Update success.');
     }
 }
