@@ -1,4 +1,4 @@
 [DONE]: crud book, update book cover
 [DONE]: fix policies book with role
 [DONE]: add message success or error when finish action
-[PENDING]: authorize book ui
+[DONE]: authorize book ui
