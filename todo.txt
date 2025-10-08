@@ -2,3 +2,6 @@
 [DONE]: fix policies book with role
 [DONE]: add message success or error when finish action
 [DONE]: authorize book ui
+
+[PENDING]: crud chapter
+[PENDING]: add book genres
