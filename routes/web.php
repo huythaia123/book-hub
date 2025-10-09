@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ChapterController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -17,6 +18,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('books/{book}/cover', [BookController::class, 'updateBookCover']);
     Route::resource('books', BookController::class);
+    Route::resource('books.chapters', ChapterController::class);
 });
 
 require __DIR__ . '/settings.php';

@@ -62,6 +62,18 @@ export interface Book {
     aud_type: string;
     status: string;
     cover_image?: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string;
+    chapters: Chapter[];
+}
+
+export interface Chapter {
+    id: number;
+    book_id: number;
+    title: string;
+    slug: string;
+    content: string;
+    created_at: string;
+    updated_at: string;
 }

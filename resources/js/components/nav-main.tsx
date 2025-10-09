@@ -28,7 +28,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                 asChild
                                 isActive={isActive}
                                 tooltip={{ children: item.title }}
-                                className={`data-[active=true]:bg-blue-500 data-[active=true]:text-white`}
+                                className={`data-[active=true]:bg-primary data-[active=true]:text-white`}
                             >
                                 <Link href={item.href} prefetch>
                                     {item.icon && <item.icon />}

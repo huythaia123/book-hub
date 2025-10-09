@@ -17,4 +17,9 @@ class Book extends Model
         'status',
         'cover_image'
     ];
+
+    public function chapters()
+    {
+        return $this->hasMany(Chapter::class);
+    }
 }

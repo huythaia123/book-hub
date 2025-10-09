@@ -13,10 +13,10 @@ use Inertia\Inertia;
 
 class BookController extends Controller
 {
-    private function slugify(string $str)
-    {
-        return Str::slug($str);
-    }
+    // private function slugify(string $str)
+    // {
+    //     return Str::slug($str);
+    // }
 
     // show list book page
     public function index(Request $request)
@@ -56,7 +56,7 @@ class BookController extends Controller
 
         $request->user()->books()->create([
             ...$validated,
-            'slug' => $this->slugify($validated['title']),
+            'slug' => slugify($validated['title']),
         ]);
 
         return to_route('books.index')
@@ -67,7 +67,10 @@ class BookController extends Controller
     public function show(Book $book)
     {
         Gate::authorize('view', $book);
-        return Inertia::render('books/show', ['book' => $book]);
+        return Inertia::render(
+            'books/show',
+            ['book' => $book->load('chapters')]
+        );
     }
 
     // show edit book page
@@ -107,7 +110,7 @@ class BookController extends Controller
         $book->fill($validated);
 
         if ($book->isDirty('title')) {
-            $book->slug = $this->slugify($validated['title']);
+            $book->slug = slugify($validated['title']);
         }
 
         $book->save();

@@ -32,6 +32,9 @@ export default function Show({ book }: { book: Book }) {
 
                     <div className='space-y-2'>
                         <div className='space-x-2'>
+                            <Button onClick={() => router.visit(books.chapters.create({ book: book.id }))}>
+                                Create chapter
+                            </Button>
                             <Button variant={'outline'} onClick={() => router.visit(books.edit(book.id).url)}>
                                 Edit book
                             </Button>
